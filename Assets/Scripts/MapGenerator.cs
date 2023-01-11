@@ -12,7 +12,20 @@ public class MapGenerator {
 
         for (var i = 0; i < mapSize; i++) {
             for (var j = 0; j < mapSize; j++) {
-                map[i, j] = _noiseFilter.Evaluate(new float2(i, j)) > 0.2 ? TileType.Base : TileType.Mountain;
+                var noiseValue = _noiseFilter.Evaluate(new float2(i, j));
+                var tileType = TileType.Base;
+
+                if (noiseValue < 0.25) {
+                    tileType = TileType.River;
+                }
+                else if (noiseValue < 0.35) {
+                    tileType = TileType.Mountain;
+                }
+                else if (noiseValue < 0.45) {
+                    tileType = TileType.Tree;
+                }
+
+                map[i, j] = tileType;
             }
         }
 
