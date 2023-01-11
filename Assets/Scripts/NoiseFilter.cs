@@ -7,20 +7,23 @@ public class NoiseFilter {
         _settings = settings;
     }
 
-    public float Evaluate(float2 location) {
+    private static float GetBaseNoise(float nx, float ny, float nz = 0f) {
+        return (noise.snoise(new float3(nx, ny, nz)) + 1) * 0.5f;
+    }
+
+    public float GetSimplexNoise(float2 location) {
         var frequency = _settings.baseFrequency;
         var amplitude = _settings.baseAmplitude;
         var amplitudeSum = 0f;
         var noiseValue = 0f;
 
-        for (var i = 0; i < _settings.octaves; i++) {
-            // adding 1 and multiplying by 0.5 - because snoise returns -1 < 1
-            noiseValue += (noise.snoise(location * frequency) + 1) * 0.5f * amplitude;
-            frequency *= _settings.frequencyScalar;
+        for (var octave = 0;
+             octave < _settings.octaves;
+             octave++, amplitude *= _settings.persistence, frequency *= _settings.frequencyScalar) {
+            noiseValue += GetBaseNoise(location.x * frequency, location.y * frequency, octave) * amplitude;
             amplitudeSum += amplitude;
-            amplitude *= _settings.amplitudeScalar;
         }
 
-        return noiseValue * _settings.amplitude / amplitudeSum;
+        return noiseValue / amplitudeSum;
     }
 }
