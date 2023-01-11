@@ -5,15 +5,18 @@ public class MapController : MonoBehaviour {
     [SerializeField] private Tilemap tileMap;
     [SerializeField] private int mapSize;
     [SerializeField] private BaseTile baseTile;
+    public NoiseSettings noiseSettings;
 
     private Grid _grid;
     private Camera _main;
     private TileType[,] _map;
+    private MapGenerator _mapGenerator;
     private Vector3Int _previouslyHoveredCell;
 
     private void Start() {
         _main = Camera.main;
         _grid = gameObject.GetComponent<Grid>();
+        _mapGenerator = new MapGenerator(noiseSettings);
         GenerateAndRenderMap();
     }
 
@@ -40,27 +43,8 @@ public class MapController : MonoBehaviour {
     }
 
     private void GenerateMap() {
-        _map = new TileType[mapSize, mapSize];
-
-        for (var i = 0; i < mapSize / 2; i++) {
-            for (var j = 0; j < mapSize / 2; j++) {
-                _map[i, j] = TileType.Base;
-            }
-
-            for (var k = 0; k < mapSize / 2; k++) {
-                _map[i, k] = TileType.Mountain;
-            }
-        }
-
-        for (var i = mapSize / 2; i < mapSize; i++) {
-            for (var j = 0; j < mapSize / 2; j++) {
-                _map[i, j] = TileType.Tree;
-            }
-
-            for (var k = mapSize / 2; k < mapSize; k++) {
-                _map[i, k] = TileType.River;
-            }
-        }
+        _mapGenerator ??= new MapGenerator(noiseSettings);
+        _map = MapGenerator.Generate(mapSize);
     }
 
     private void RenderMap() {
