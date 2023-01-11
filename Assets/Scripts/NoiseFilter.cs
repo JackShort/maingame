@@ -11,7 +11,7 @@ public class NoiseFilter {
         return (noise.snoise(new float3(nx, ny, nz)) + 1) * 0.5f;
     }
 
-    public float GetSimplexNoise(float2 location) {
+    private float GetSimplexNoise(float nx, float ny) {
         var frequency = _settings.baseFrequency;
         var amplitude = _settings.baseAmplitude;
         var amplitudeSum = 0f;
@@ -20,10 +20,16 @@ public class NoiseFilter {
         for (var octave = 0;
              octave < _settings.octaves;
              octave++, amplitude *= _settings.persistence, frequency *= _settings.frequencyScalar) {
-            noiseValue += GetBaseNoise(location.x * frequency, location.y * frequency, octave) * amplitude;
+            noiseValue += GetBaseNoise(nx * frequency, ny * frequency, octave) * amplitude;
             amplitudeSum += amplitude;
         }
 
         return noiseValue / amplitudeSum;
+    }
+
+    public float GetSimplexNoiseAtMapLocation(float2 location, int mapSize) {
+        var nx = location.x / mapSize - 0.5f;
+        var ny = location.y / mapSize - 0.5f;
+        return GetSimplexNoise(nx, ny);
     }
 }

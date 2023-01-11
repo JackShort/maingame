@@ -12,7 +12,7 @@ public class MapGenerator {
 
         for (var i = 0; i < mapSize; i++) {
             for (var j = 0; j < mapSize; j++) {
-                var noiseValue = _noiseFilter.GetSimplexNoise(new float2(i, j));
+                var noiseValue = _noiseFilter.GetSimplexNoiseAtMapLocation(new float2(i, j), mapSize);
                 var tileType = TileType.Base;
 
                 if (noiseValue < 0.25) {
