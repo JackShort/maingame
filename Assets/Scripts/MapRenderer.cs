@@ -2,12 +2,11 @@ using UnityEngine;
 using UnityEngine.Tilemaps;
 
 public class MapRenderer : MonoBehaviour {
+    public Map map;
     [SerializeField] private Tilemap tileMap;
-    [SerializeField] private int mapSize;
     [SerializeField] private BaseTile baseTile;
-    public NoiseSettings noiseSettings;
+    [SerializeField] private NoiseSettings noiseSettings;
 
-    private TileType[,] _map;
     private MapGenerator _mapGenerator;
 
     private void Start() {
@@ -17,18 +16,18 @@ public class MapRenderer : MonoBehaviour {
 
     private void GenerateMap() {
         _mapGenerator ??= new MapGenerator(noiseSettings);
-        _map = MapGenerator.Generate(mapSize);
+        map.Tiles = MapGenerator.Generate(map.mapSize);
     }
 
     private void RenderMap() {
         tileMap.ClearAllTiles();
 
-        var center = mapSize / 2;
+        var center = map.mapSize / 2;
 
-        for (var i = 0; i < mapSize; i++) {
-            for (var j = 0; j < mapSize; j++) {
+        for (var i = 0; i < map.mapSize; i++) {
+            for (var j = 0; j < map.mapSize; j++) {
                 var baseTileClone = Instantiate(baseTile);
-                baseTileClone.tileType = _map[i, j];
+                baseTileClone.tileType = map.Tiles[i, j];
                 tileMap.SetTile(new Vector3Int(i - center, j - center, 0), baseTileClone);
             }
         }
