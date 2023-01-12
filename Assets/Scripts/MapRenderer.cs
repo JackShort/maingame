@@ -4,6 +4,7 @@ using UnityEngine.Tilemaps;
 public class MapRenderer : MonoBehaviour {
     public Map map;
     [SerializeField] private Tilemap tileMap;
+    [SerializeField] private IntegerReference mapSize;
     [SerializeField] private BaseTile baseTile;
     [SerializeField] private NoiseSettings noiseSettings;
 
@@ -16,16 +17,16 @@ public class MapRenderer : MonoBehaviour {
 
     private void GenerateMap() {
         _mapGenerator ??= new MapGenerator(noiseSettings);
-        map.Tiles = MapGenerator.Generate(map.mapSize);
+        map.Tiles = MapGenerator.Generate(mapSize.Value);
     }
 
     private void RenderMap() {
         tileMap.ClearAllTiles();
 
-        var center = map.mapSize / 2;
+        var center = mapSize.Value / 2;
 
-        for (var i = 0; i < map.mapSize; i++) {
-            for (var j = 0; j < map.mapSize; j++) {
+        for (var i = 0; i < mapSize.Value; i++) {
+            for (var j = 0; j < mapSize.Value; j++) {
                 var baseTileClone = Instantiate(baseTile);
                 baseTileClone.tileType = map.Tiles[i, j];
                 tileMap.SetTile(new Vector3Int(i - center, j - center, 0), baseTileClone);
