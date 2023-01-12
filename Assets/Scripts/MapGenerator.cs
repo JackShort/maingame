@@ -1,31 +1,41 @@
 using Unity.Mathematics;
 
 public class MapGenerator {
-    private static NoiseFilter _noiseFilter;
+    private readonly Resource _empty;
+    private readonly Resource _mountains;
+    private readonly NoiseFilter _noiseFilter;
+    private readonly Resource _trees;
+    private readonly Resource _water;
 
-    public MapGenerator(NoiseSettings noiseSettings) {
+    public MapGenerator(NoiseSettings noiseSettings, Resource empty, Resource mountains, Resource trees,
+        Resource water) {
         _noiseFilter = new NoiseFilter(noiseSettings);
+        _empty = empty;
+        _mountains = mountains;
+        _trees = trees;
+        _water = water;
     }
 
-    public static TileType[,] Generate(int mapSize) {
-        var map = new TileType[mapSize, mapSize];
+
+    public Resource[,] Generate(int mapSize) {
+        var map = new Resource[mapSize, mapSize];
 
         for (var i = 0; i < mapSize; i++) {
             for (var j = 0; j < mapSize; j++) {
                 var noiseValue = _noiseFilter.GetSimplexNoiseAtMapLocation(new float2(i, j), mapSize);
-                var tileType = TileType.Base;
+                var resource = _empty;
 
                 if (noiseValue < 0.25) {
-                    tileType = TileType.River;
+                    resource = _water;
                 }
                 else if (noiseValue < 0.35) {
-                    tileType = TileType.Mountain;
+                    resource = _mountains;
                 }
                 else if (noiseValue < 0.45) {
-                    tileType = TileType.Tree;
+                    resource = _trees;
                 }
 
-                map[i, j] = tileType;
+                map[i, j] = resource;
             }
         }
 
