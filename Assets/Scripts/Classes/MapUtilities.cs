@@ -1,5 +1,4 @@
 using JetBrains.Annotations;
-using Unity.Mathematics;
 using UnityEngine;
 
 /// <summary>
@@ -21,22 +20,22 @@ public static class MapUtilities {
     /// </summary>
     /// <param name="tileCoordinates">Coordinates of the tile</param>
     /// <param name="map">The map to check</param>
-    /// <returns>Map indices</returns>
-    private static int2? GetMapCoordinatesFromTileCoordinates(int2 tileCoordinates, Map map) {
+    /// <returns>Map indices (row, col)</returns>
+    public static ArrayIndex2? GetMapIndexFromTileCoordinates(Vector3Int tileCoordinates, Map map) {
         var mapWidth = map.Tiles.GetLength(1);
         var mapHeight = map.Tiles.GetLength(0);
 
-        var horizontalCenter = mapWidth / 2;
-        var verticalCenter = mapHeight / 2;
+        var horizontalOffset = mapWidth / 2;
+        var verticalOffset = mapHeight / 2;
 
-        var x = tileCoordinates.x + verticalCenter;
-        var y = tileCoordinates.y + horizontalCenter;
+        var r = tileCoordinates.y + verticalOffset;
+        var c = tileCoordinates.x + horizontalOffset;
 
-        if (x < 0 || x >= mapHeight || y < 0 || y >= mapWidth) {
+        if (c < 0 || c >= mapWidth || r < 0 || r >= mapHeight) {
             return null;
         }
 
-        return new int2(x, y);
+        return new ArrayIndex2(r, c);
     }
 
     /// <summary>
@@ -45,8 +44,8 @@ public static class MapUtilities {
     /// <param name="tileCoordinates">Coordinates of the tile</param>
     /// <param name="map">The map to check</param>
     /// <returns>if the tile is in the bounds of the tilemap</returns>
-    public static bool CheckIfTilePositionIsInMapBounds(int2 tileCoordinates, Map map) {
-        var mapCoords = GetMapCoordinatesFromTileCoordinates(tileCoordinates, map);
+    public static bool CheckIfTilePositionIsInMapBounds(Vector3Int tileCoordinates, Map map) {
+        var mapCoords = GetMapIndexFromTileCoordinates(tileCoordinates, map);
 
         return mapCoords != null;
     }
@@ -58,9 +57,9 @@ public static class MapUtilities {
     /// <param name="grid">The tilemap grid</param>
     /// <param name="map">The map to check</param>
     /// <returns>Coordinates of map if in bounds</returns>
-    private static int2? GetHoveredMapCoordinates(Camera main, Grid grid, Map map) {
+    public static ArrayIndex2? GetHoveredMapCoordinates(Camera main, Grid grid, Map map) {
         var tileCoordinates = GetHoveredTileCoordinates(main, grid);
-        var mapCoordinates = GetMapCoordinatesFromTileCoordinates(new int2(tileCoordinates.x, tileCoordinates.y), map);
+        var mapCoordinates = GetMapIndexFromTileCoordinates(tileCoordinates, map);
 
         return mapCoordinates;
     }
@@ -72,10 +71,10 @@ public static class MapUtilities {
     /// <param name="map">The map to check against</param>
     /// <returns>Resource at tile location</returns>
     [CanBeNull]
-    public static Resource GetResourceAtTileCoordinates(int2 tileCoordinates, Map map) {
-        var coordinates = GetMapCoordinatesFromTileCoordinates(tileCoordinates, map);
+    public static Resource GetResourceAtTileCoordinates(Vector3Int tileCoordinates, Map map) {
+        var coordinates = GetMapIndexFromTileCoordinates(tileCoordinates, map);
 
-        return coordinates != null ? map.Tiles[coordinates.Value.x, coordinates.Value.y] : null;
+        return coordinates != null ? map.Tiles[coordinates.Value.r, coordinates.Value.c] : null;
     }
 
     /// <summary>
@@ -88,6 +87,18 @@ public static class MapUtilities {
     [CanBeNull]
     public static Resource GetResourceFromHoveredTile(Camera main, Grid grid, Map map) {
         var mapCoordinates = GetHoveredMapCoordinates(main, grid, map);
-        return mapCoordinates != null ? map.Tiles[mapCoordinates.Value.x, mapCoordinates.Value.y] : null;
+        return mapCoordinates != null ? map.Tiles[mapCoordinates.Value.r, mapCoordinates.Value.c] : null;
+    }
+
+    public static Vector3 GetWorldPositionFromTileCoordinates(Vector3Int tileCoordinates, Grid grid) {
+        return grid.CellToWorld(tileCoordinates);
+    }
+
+    public static Vector3 GetWorldPositionFromMapCoordinates(Vector3Int mapCoordinates, Grid grid, Map map) {
+        var centerX = map.Tiles.GetLength(1) / 2;
+        var centerY = map.Tiles.GetLength(0) / 2;
+
+        var tileCoordinates = new Vector3Int(mapCoordinates.x - centerX, mapCoordinates.y - centerY, 0);
+        return grid.CellToWorld(tileCoordinates);
     }
 }

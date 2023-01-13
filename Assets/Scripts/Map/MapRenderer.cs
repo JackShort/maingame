@@ -19,14 +19,15 @@ public class MapRenderer : MonoBehaviour {
     private void RenderMap() {
         tileMap.ClearAllTiles();
 
-        var center = map.Tiles.GetLength(0) / 2;
+        var horizontalOffset = map.Tiles.GetLength(1) / 2;
+        var verticalOffset = map.Tiles.GetLength(0) / 2;
 
-        for (var i = 0; i < map.Tiles.GetLength(0); i++) {
-            for (var j = 0; j < map.Tiles.GetLength(1); j++) {
+        for (var y = 0; y < map.Tiles.GetLength(0); y++) {
+            for (var x = 0; x < map.Tiles.GetLength(1); x++) {
                 var baseTileClone = Instantiate(dummyTile);
-                baseTileClone.color = map.Tiles[i, j].color;
-                baseTileClone.sprite = map.Tiles[i, j].tileSprite;
-                tileMap.SetTile(new Vector3Int(i - center, j - center, 0), baseTileClone);
+                baseTileClone.color = map.Tiles[y, x].color;
+                baseTileClone.sprite = map.Tiles[y, x].tileSprite;
+                tileMap.SetTile(new Vector3Int(x - horizontalOffset, y - verticalOffset, 0), baseTileClone);
             }
         }
     }

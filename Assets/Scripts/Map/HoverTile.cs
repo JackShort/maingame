@@ -1,4 +1,3 @@
-using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -22,8 +21,7 @@ public class HoverTile : MonoBehaviour {
 
         if (tileMap.GetTile(_previouslyHoveredCell)) {
             var resource =
-                MapUtilities.GetResourceAtTileCoordinates(new int2(_previouslyHoveredCell.x, _previouslyHoveredCell.y),
-                    map);
+                MapUtilities.GetResourceAtTileCoordinates(_previouslyHoveredCell, map);
 
             if (resource) {
                 tileMap.SetColor(_previouslyHoveredCell, resource.color);

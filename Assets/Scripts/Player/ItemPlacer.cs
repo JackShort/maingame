@@ -1,4 +1,3 @@
-using Unity.Mathematics;
 using UnityEngine;
 
 public class ItemPlacer : MonoBehaviour {
@@ -21,7 +20,7 @@ public class ItemPlacer : MonoBehaviour {
     private void CheckHoveredTile() {
         var hoveredTile = MapUtilities.GetHoveredTileCoordinates(_main, grid);
 
-        if (!MapUtilities.CheckIfTilePositionIsInMapBounds(new int2(hoveredTile.x, hoveredTile.y), map)) {
+        if (!MapUtilities.CheckIfTilePositionIsInMapBounds(hoveredTile, map)) {
             return;
         }
 

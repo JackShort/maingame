@@ -21,9 +21,9 @@ public class MapGenerator : MonoBehaviour {
     public Resource[,] Generate(int mapSize) {
         var map = new Resource[mapSize, mapSize];
 
-        for (var i = 0; i < mapSize; i++) {
-            for (var j = 0; j < mapSize; j++) {
-                var noiseValue = _noiseFilter.GetSimplexNoiseAtMapLocation(new float2(i, j), mapSize);
+        for (var y = 0; y < mapSize; y++) {
+            for (var x = 0; x < mapSize; x++) {
+                var noiseValue = _noiseFilter.GetSimplexNoiseAtMapLocation(new float2(x, y), mapSize);
                 var resource = emptyResource;
 
                 if (noiseValue < 0.25) {
@@ -36,7 +36,7 @@ public class MapGenerator : MonoBehaviour {
                     resource = treesResource;
                 }
 
-                map[i, j] = resource;
+                map[y, x] = resource;
             }
         }
 
