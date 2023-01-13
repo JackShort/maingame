@@ -1,3 +1,4 @@
+using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -13,15 +14,16 @@ public class HoverTile : MonoBehaviour {
         _main = Camera.main;
     }
 
-    // Update is called once per frame
     private void Update() {
-        var hoveredCell = GetHoveredTile();
+        var hoveredCell = MapUtilities.GetHoveredTileCoordinates(_main, grid);
         if (hoveredCell == _previouslyHoveredCell) {
             return;
         }
 
         if (tileMap.GetTile(_previouslyHoveredCell)) {
-            var resource = GetTileResource(_previouslyHoveredCell);
+            var resource =
+                MapUtilities.GetResourceAtTileCoordinates(new int2(_previouslyHoveredCell.x, _previouslyHoveredCell.y),
+                    map);
 
             if (resource) {
                 tileMap.SetColor(_previouslyHoveredCell, resource.color);
@@ -34,26 +36,5 @@ public class HoverTile : MonoBehaviour {
         }
 
         tileMap.SetColor(hoveredCell, Color.yellow);
-    }
-
-    private Vector3Int GetHoveredTile() {
-        var mousePosition = _main.ScreenToWorldPoint(Input.mousePosition);
-        var cellPosition = grid.WorldToCell(mousePosition);
-        return cellPosition;
-    }
-
-    private Resource GetTileResource(Vector3Int cellPosition) {
-        var horizontalCenter = map.Tiles.GetLength(0) / 2;
-        var verticalCenter = map.Tiles.GetLength(1) / 2;
-
-        var x = cellPosition.x + verticalCenter;
-        var y = cellPosition.y + horizontalCenter;
-
-
-        if (x < 0 || x >= map.Tiles.GetLength(0) || y < 0 || y >= map.Tiles.GetLength(1)) {
-            return null;
-        }
-
-        return map.Tiles[x, y];
     }
 }
