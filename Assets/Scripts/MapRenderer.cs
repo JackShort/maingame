@@ -13,9 +13,7 @@ public class MapRenderer : MonoBehaviour {
 
     private void GenerateMap() {
         var mapGenerator = GetComponent<MapGenerator>();
-        if (mapGenerator != null) {
-            map.Tiles = mapGenerator.Generate(mapSize.Value);
-        }
+        map.Tiles = mapGenerator.Generate(mapSize.Value);
     }
 
     private void RenderMap() {
