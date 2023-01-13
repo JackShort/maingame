@@ -1,21 +1,22 @@
 using Unity.Mathematics;
+using UnityEngine;
 
-public class MapGenerator {
-    private readonly Resource _empty;
-    private readonly Resource _mountains;
-    private readonly NoiseFilter _noiseFilter;
-    private readonly Resource _trees;
-    private readonly Resource _water;
+public class MapGenerator : MonoBehaviour {
+    [SerializeField] private Resource emptyResource;
+    [SerializeField] private Resource mountainsResource;
+    [SerializeField] private Resource treesResource;
+    [SerializeField] private Resource waterResource;
+    [SerializeField] private NoiseSettings noiseSettings;
 
-    public MapGenerator(NoiseSettings noiseSettings, Resource empty, Resource mountains, Resource trees,
-        Resource water) {
+    private NoiseFilter _noiseFilter;
+
+    private void Start() {
         _noiseFilter = new NoiseFilter(noiseSettings);
-        _empty = empty;
-        _mountains = mountains;
-        _trees = trees;
-        _water = water;
     }
 
+    private void OnValidate() {
+        _noiseFilter ??= new NoiseFilter(noiseSettings);
+    }
 
     public Resource[,] Generate(int mapSize) {
         var map = new Resource[mapSize, mapSize];
@@ -23,16 +24,16 @@ public class MapGenerator {
         for (var i = 0; i < mapSize; i++) {
             for (var j = 0; j < mapSize; j++) {
                 var noiseValue = _noiseFilter.GetSimplexNoiseAtMapLocation(new float2(i, j), mapSize);
-                var resource = _empty;
+                var resource = emptyResource;
 
                 if (noiseValue < 0.25) {
-                    resource = _water;
+                    resource = waterResource;
                 }
                 else if (noiseValue < 0.35) {
-                    resource = _mountains;
+                    resource = mountainsResource;
                 }
                 else if (noiseValue < 0.45) {
-                    resource = _trees;
+                    resource = treesResource;
                 }
 
                 map[i, j] = resource;
