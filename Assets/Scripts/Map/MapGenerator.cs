@@ -18,8 +18,8 @@ public class MapGenerator : MonoBehaviour {
         _noiseFilter ??= new NoiseFilter(noiseSettings);
     }
 
-    public Resource[,] Generate(int mapSize) {
-        var map = new Resource[mapSize, mapSize];
+    public void Generate(ref Map<Resource> map, int mapSize) {
+        map.Elements = new Resource[mapSize, mapSize];
 
         for (var y = 0; y < mapSize; y++) {
             for (var x = 0; x < mapSize; x++) {
@@ -36,10 +36,8 @@ public class MapGenerator : MonoBehaviour {
                     resource = treesResource;
                 }
 
-                map[y, x] = resource;
+                map.Elements[y, x] = resource;
             }
         }
-
-        return map;
     }
 }

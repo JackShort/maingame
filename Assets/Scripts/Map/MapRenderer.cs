@@ -13,7 +13,7 @@ public class MapRenderer : MonoBehaviour {
 
     private void GenerateMap() {
         var mapGenerator = GetComponent<MapGenerator>();
-        resourceMap.Elements = mapGenerator.Generate(mapSize.Value);
+        mapGenerator.Generate(ref resourceMap, mapSize.Value);
     }
 
     private void RenderMap() {
