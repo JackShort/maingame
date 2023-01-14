@@ -21,7 +21,7 @@ public static class MapUtilities {
     /// <param name="tileCoordinates">Coordinates of the tile</param>
     /// <param name="map">The map to check</param>
     /// <returns>Map indices (row, col)</returns>
-    public static ArrayIndex2? GetMapIndexFromTileCoordinates(Vector3Int tileCoordinates, Map map) {
+    private static ArrayIndex2? GetMapIndexFromTileCoordinates(Vector3Int tileCoordinates, Map map) {
         var mapWidth = map.Tiles.GetLength(1);
         var mapHeight = map.Tiles.GetLength(0);
 
@@ -57,7 +57,7 @@ public static class MapUtilities {
     /// <param name="grid">The tilemap grid</param>
     /// <param name="map">The map to check</param>
     /// <returns>Coordinates of map if in bounds</returns>
-    public static ArrayIndex2? GetHoveredMapCoordinates(Camera main, Grid grid, Map map) {
+    private static ArrayIndex2? GetHoveredMapCoordinates(Camera main, Grid grid, Map map) {
         var tileCoordinates = GetHoveredTileCoordinates(main, grid);
         var mapCoordinates = GetMapIndexFromTileCoordinates(tileCoordinates, map);
 
