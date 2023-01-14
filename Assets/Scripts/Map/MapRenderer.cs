@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.Tilemaps;
 
 public class MapRenderer : MonoBehaviour {
-    public Map map;
+    public Map<Resource> resourceMap;
     [SerializeField] private Tilemap tileMap;
     [SerializeField] private IntegerReference mapSize;
     [SerializeField] private DummyTile dummyTile;
@@ -13,20 +13,20 @@ public class MapRenderer : MonoBehaviour {
 
     private void GenerateMap() {
         var mapGenerator = GetComponent<MapGenerator>();
-        map.Tiles = mapGenerator.Generate(mapSize.Value);
+        resourceMap.Elements = mapGenerator.Generate(mapSize.Value);
     }
 
     private void RenderMap() {
         tileMap.ClearAllTiles();
 
-        var horizontalOffset = map.Tiles.GetLength(1) / 2;
-        var verticalOffset = map.Tiles.GetLength(0) / 2;
+        var horizontalOffset = resourceMap.Elements.GetLength(1) / 2;
+        var verticalOffset = resourceMap.Elements.GetLength(0) / 2;
 
-        for (var y = 0; y < map.Tiles.GetLength(0); y++) {
-            for (var x = 0; x < map.Tiles.GetLength(1); x++) {
+        for (var y = 0; y < resourceMap.Elements.GetLength(0); y++) {
+            for (var x = 0; x < resourceMap.Elements.GetLength(1); x++) {
                 var baseTileClone = Instantiate(dummyTile);
-                baseTileClone.color = map.Tiles[y, x].color;
-                baseTileClone.sprite = map.Tiles[y, x].tileSprite;
+                baseTileClone.color = resourceMap.Elements[y, x].color;
+                baseTileClone.sprite = resourceMap.Elements[y, x].tileSprite;
                 tileMap.SetTile(new Vector3Int(x - horizontalOffset, y - verticalOffset, 0), baseTileClone);
             }
         }

@@ -4,7 +4,7 @@ using UnityEngine.Tilemaps;
 public class HoverTile : MonoBehaviour {
     [SerializeField] private Tilemap tileMap;
     [SerializeField] private Grid grid;
-    [SerializeField] private Map map;
+    [SerializeField] private Map<Resource> map;
     [SerializeField] private Inventory inventory;
     [SerializeField] private GameObject itemPlacer;
 
@@ -17,13 +17,13 @@ public class HoverTile : MonoBehaviour {
 
     // TODO: make function on item placer that updates the sprite etc. this is hacky
     private void Update() {
-        var hoveredTileCoordinates = MapUtilities.GetHoveredTileCoordinates(_main, grid);
+        var hoveredTileCoordinates = MapUtilities<Resource>.GetHoveredTileCoordinates(_main, grid);
 
         if (hoveredTileCoordinates == _previouslyHoveredTileCoordinates) {
             return;
         }
 
-        if (!MapUtilities.CheckIfTilePositionIsInMapBounds(hoveredTileCoordinates, map)) {
+        if (!MapUtilities<Resource>.CheckIfTilePositionIsInMapBounds(hoveredTileCoordinates, map)) {
             if (itemPlacer.activeSelf) {
                 itemPlacer.SetActive(false);
             }
@@ -35,7 +35,7 @@ public class HoverTile : MonoBehaviour {
             itemPlacer.SetActive(true);
         }
 
-        var worldCoordinates = MapUtilities.GetWorldPositionFromTileCoordinates(hoveredTileCoordinates, grid);
+        var worldCoordinates = MapUtilities<Resource>.GetWorldPositionFromTileCoordinates(hoveredTileCoordinates, grid);
         itemPlacer.transform.position = new Vector3(worldCoordinates.x + 0.5f, worldCoordinates.y + 0.5f, 0);
 
         var activeItem = inventory.GetActiveItem();
