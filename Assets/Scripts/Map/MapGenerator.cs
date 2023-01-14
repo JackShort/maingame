@@ -18,7 +18,7 @@ public class MapGenerator : MonoBehaviour {
         _noiseFilter ??= new NoiseFilter(noiseSettings);
     }
 
-    public void Generate(ref Map<Resource> map, int mapSize) {
+    public void GenerateResourceMap(ref Map<Resource> map, int mapSize) {
         map.Elements = new Resource[mapSize, mapSize];
 
         for (var y = 0; y < mapSize; y++) {
@@ -39,5 +39,9 @@ public class MapGenerator : MonoBehaviour {
                 map.Elements[y, x] = resource;
             }
         }
+    }
+
+    public static void GenerateStructureMap(ref Map<Structure> map, int mapSize) {
+        map.Elements = new Structure[mapSize, mapSize];
     }
 }

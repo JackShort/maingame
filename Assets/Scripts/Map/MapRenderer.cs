@@ -3,6 +3,7 @@ using UnityEngine.Tilemaps;
 
 public class MapRenderer : MonoBehaviour {
     public Map<Resource> resourceMap;
+    public Map<Structure> structureMap;
     [SerializeField] private Tilemap tileMap;
     [SerializeField] private IntegerReference mapSize;
     [SerializeField] private DummyTile dummyTile;
@@ -13,7 +14,8 @@ public class MapRenderer : MonoBehaviour {
 
     private void GenerateMap() {
         var mapGenerator = GetComponent<MapGenerator>();
-        mapGenerator.Generate(ref resourceMap, mapSize.Value);
+        mapGenerator.GenerateResourceMap(ref resourceMap, mapSize.Value);
+        MapGenerator.GenerateStructureMap(ref structureMap, mapSize.Value);
     }
 
     private void RenderMap() {
