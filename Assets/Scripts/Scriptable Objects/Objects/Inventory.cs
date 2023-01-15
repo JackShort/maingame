@@ -1,7 +1,7 @@
 using JetBrains.Annotations;
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "Custom/Inventory")]
+[CreateAssetMenu(menuName = "Custom/Game Element/Inventory")]
 public class Inventory : RuntimeSet<Item> {
     public int activeIndex;
 

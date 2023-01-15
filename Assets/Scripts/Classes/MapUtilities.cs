@@ -30,11 +30,9 @@ public static class MapUtilities<T> {
         var r = tileCoordinates.y + verticalOffset;
         var c = tileCoordinates.x + horizontalOffset;
 
-        if (c < 0 || c >= mapWidth || r < 0 || r >= mapHeight) {
-            return null;
-        }
+        var mapCoords = new ArrayIndex2(r, c);
 
-        return new ArrayIndex2(r, c);
+        return map.IsInBounds(mapCoords) ? mapCoords : null;
     }
 
     /// <summary>
@@ -56,7 +54,7 @@ public static class MapUtilities<T> {
     /// <param name="grid">The tilemap grid</param>
     /// <param name="map">The map to check</param>
     /// <returns>Coordinates of map if in bounds</returns>
-    private static ArrayIndex2? GetHoveredMapCoordinates(Camera main, Grid grid, Map<T> map) {
+    public static ArrayIndex2? GetHoveredMapCoordinates(Camera main, Grid grid, Map<T> map) {
         var tileCoordinates = GetHoveredTileCoordinates(main, grid);
         var mapCoordinates = GetMapIndexFromTileCoordinates(tileCoordinates, map);
 
@@ -88,14 +86,17 @@ public static class MapUtilities<T> {
     }
 
     public static Vector3 GetWorldPositionFromTileCoordinates(Vector3Int tileCoordinates, Grid grid) {
-        return grid.CellToWorld(tileCoordinates);
+        var worldCoordinates = grid.CellToWorld(tileCoordinates);
+
+        // applying offset to center the tile
+        return new Vector3(worldCoordinates.x + 0.5f, worldCoordinates.y + 0.5f, worldCoordinates.z);
     }
 
-    public static Vector3 GetWorldPositionFromMapCoordinates(Vector3Int mapCoordinates, Grid grid, Map<T> map) {
-        var centerX = map.Elements.GetLength(1) / 2;
-        var centerY = map.Elements.GetLength(0) / 2;
+    public static Vector3 GetWorldPositionFromMapCoordinates(ArrayIndex2 mapCoordinates, Grid grid, Map<T> map) {
+        var horizontalOffset = map.Elements.GetLength(1) / 2;
+        var verticalOffset = map.Elements.GetLength(0) / 2;
 
-        var tileCoordinates = new Vector3Int(mapCoordinates.x - centerX, mapCoordinates.y - centerY, 0);
-        return grid.CellToWorld(tileCoordinates);
+        var tileCoordinates = new Vector3Int(mapCoordinates.c - horizontalOffset, mapCoordinates.r - verticalOffset, 0);
+        return GetWorldPositionFromTileCoordinates(tileCoordinates, grid);
     }
 }

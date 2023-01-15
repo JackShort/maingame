@@ -1,12 +1,11 @@
 using UnityEngine;
-using UnityEngine.Tilemaps;
 
 public class HoverTile : MonoBehaviour {
-    [SerializeField] private Tilemap tileMap;
     [SerializeField] private Grid grid;
     [SerializeField] private Map<Resource> map;
     [SerializeField] private Inventory inventory;
-    [SerializeField] private GameObject itemPlacer;
+
+    [SerializeField] private GameObject itemOverlay;
 
     private Camera _main;
     private Vector3Int _previouslyHoveredTileCoordinates;
@@ -24,24 +23,33 @@ public class HoverTile : MonoBehaviour {
         }
 
         if (!MapUtilities<Resource>.CheckIfTilePositionIsInMapBounds(hoveredTileCoordinates, map)) {
-            if (itemPlacer.activeSelf) {
-                itemPlacer.SetActive(false);
+            if (itemOverlay.activeSelf) {
+                itemOverlay.SetActive(false);
             }
 
             return;
         }
 
-        if (!itemPlacer.activeSelf) {
-            itemPlacer.SetActive(true);
-        }
-
-        var worldCoordinates = MapUtilities<Resource>.GetWorldPositionFromTileCoordinates(hoveredTileCoordinates, grid);
-        itemPlacer.transform.position = new Vector3(worldCoordinates.x + 0.5f, worldCoordinates.y + 0.5f, 0);
-
         var activeItem = inventory.GetActiveItem();
         if (activeItem != null) {
-            itemPlacer.GetComponent<SpriteRenderer>().sprite = activeItem.sprite;
+            if (activeItem.structure != null) {
+                itemOverlay.GetComponent<SpriteRenderer>().sprite = activeItem.structure.sprite;
+
+                var worldCoordinates =
+                    MapUtilities<Resource>.GetWorldPositionFromTileCoordinates(hoveredTileCoordinates, grid);
+                itemOverlay.transform.position = worldCoordinates;
+
+                if (!itemOverlay.activeSelf) {
+                    itemOverlay.SetActive(true);
+                }
+            }
+            else {
+                if (itemOverlay.activeSelf) {
+                    itemOverlay.SetActive(false);
+                }
+            }
         }
+
 
         _previouslyHoveredTileCoordinates = hoveredTileCoordinates;
     }

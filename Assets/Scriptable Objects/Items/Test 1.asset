@@ -13,3 +13,4 @@ MonoBehaviour:
   m_Name: Test 1
   m_EditorClassIdentifier: 
   sprite: {fileID: 21300000, guid: 95d6ca694e94ad44fb3bb913c6de3c42, type: 3}
+  structure: {fileID: 0}
