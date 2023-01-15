@@ -1,9 +1,10 @@
 using UnityEngine;
 
 public class HoverTile : MonoBehaviour {
-    [SerializeField] private Grid grid;
-    [SerializeField] private Map<Resource> map;
+    [SerializeField] private BoolReference inPlacingMode;
     [SerializeField] private Inventory inventory;
+    [SerializeField] private Map<Resource> map;
+    [SerializeField] private Grid grid;
 
     [SerializeField] private GameObject itemOverlay;
 
@@ -16,6 +17,14 @@ public class HoverTile : MonoBehaviour {
 
     // TODO: make function on item placer that updates the sprite etc. this is hacky
     private void Update() {
+        if (!inPlacingMode.Value) {
+            if (itemOverlay.activeSelf) {
+                itemOverlay.SetActive(false);
+            }
+
+            return;
+        }
+
         var hoveredTileCoordinates = MapUtilities<Resource>.GetHoveredTileCoordinates(_main, grid);
 
         if (hoveredTileCoordinates == _previouslyHoveredTileCoordinates) {
@@ -42,8 +51,7 @@ public class HoverTile : MonoBehaviour {
                 if (!itemOverlay.activeSelf) {
                     itemOverlay.SetActive(true);
                 }
-            }
-            else {
+            } else {
                 if (itemOverlay.activeSelf) {
                     itemOverlay.SetActive(false);
                 }

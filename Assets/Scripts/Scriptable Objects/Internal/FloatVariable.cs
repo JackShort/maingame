@@ -1,6 +1,6 @@
 using UnityEngine;
 
-[CreateAssetMenu]
+[CreateAssetMenu(menuName = "Variable/Float Variable")]
 public class FloatVariable : ScriptableObject {
     public float value;
 }
