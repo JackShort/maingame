@@ -12,6 +12,7 @@ public class CameraPan : MonoBehaviour {
     private bool _panStarted;
 
     // TODO: add momentum to panning to add weight
+    // TODO: also make it so you can't pan off the edge too far
     private void Update() {
         if (!_isPanning) {
             if (_panStarted) {
