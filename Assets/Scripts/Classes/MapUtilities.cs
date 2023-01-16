@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 /// <summary>
 ///     Utility class for map functions
@@ -11,7 +12,7 @@ public static class MapUtilities<T> {
     /// <param name="grid">The grid of the tilemap</param>
     /// <returns>The coordinates of the tile</returns>
     public static Vector3Int GetHoveredTileCoordinates(Camera main, Grid grid) {
-        return grid.WorldToCell(main.ScreenToWorldPoint(Input.mousePosition));
+        return grid.WorldToCell(main.ScreenToWorldPoint(Mouse.current.position.ReadValue()));
     }
 
     /// <summary>
