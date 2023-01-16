@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 140e9909014192a4f902ccbd268114d9, type: 3}
   m_Name: MapSize
   m_EditorClassIdentifier: 
-  value: 100
+  value: 200
